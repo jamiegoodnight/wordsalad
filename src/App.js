@@ -13,6 +13,7 @@ const App = () => {
   const [myDictionary, setMyDictionary] = useState([])
   const [isClicked, setIsClicked] = useState(false)
   const [isClicked2, setIsClicked2] = useState(false)
+  const [disable, setDisable] = useState(false)
   const provider = new firebase.auth.GoogleAuthProvider();
   const db = fire.firestore();
   const fetchWords= async () => {
@@ -58,8 +59,10 @@ const App = () => {
     // })
   }
   const addWord = () => {
+    setDisable(true)
+    console.log("Disable", disable)
     setIsClicked2(true)
-    setTimeout(function(){setIsClicked2(false)}, 200)
+    if(newWord.length > 0){ 
     let words = db.collection('words')
     words.add({
       userId: user,
@@ -69,6 +72,9 @@ const App = () => {
       setNewWord("")
       fetchWords()
     })
+  }
+  setTimeout(function(){setIsClicked2(false)}, 200)
+  setDisable(false)
   }
   return (
     <div className="App">
@@ -86,7 +92,7 @@ const App = () => {
           <input type="text" value={newWord} onChange={(e) => {
             setNewWord(e.target.value)
           }}></input>
-          <div className={isClicked2===true ? "clicked2" : "Button"} onClick={(e) => addWord()}>ADD WORD OR PHRASE</div>
+          <div className={isClicked2===true ? "clicked2" : "Button"} onClick={disable === true ? console.log(disable) : (e) => addWord()}>ADD WORD OR PHRASE</div>
         </div>
         <div className="My-words">
         {dictionary.map(w => { 
