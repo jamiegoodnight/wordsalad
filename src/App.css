@@ -24,7 +24,7 @@ input {
   height: 60px;
   width: 200px;
   margin: 10px;
-  font-size: 30px;
+  font-size: 26px;
   font-family: 'Barlow', sans-serif;
 }
 
@@ -95,14 +95,70 @@ h2 {
   margin-left: 20px;
   margin-right: 20px;
   font-family: 'Lato', sans-serif;
+  font-size: 16px;
+  line-height: 22px;
 }
 
 .Icons {
-  margin-top: 270px;
+  /* margin-top: 270px; */
   margin-left: 250px;
 }
 
 .fas {
   font-size: 40px;
   margin: 10px;
+}
+
+.warning {
+  color: #dc004e;
+}
+
+#writingDefinition {
+  /* width: 300px;
+  height: 100px; */
+  width: 355px;
+  height: 300px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 20px;
+  resize: none;
+  font-size: 16px;
+  line-height: 22px;
+  font-family: 'Lato', sans-serif;
+}
+
+.no-display {
+  display: none;
+}
+
+.clicked {
+  height: 60px;
+  width: 220px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  font-family: 'Barlow', sans-serif;
+  border-radius: 5px;
+  font-size: 20px;
+  color: white;
+  background-color: #167297;
+}
+
+.clicked2 {
+  height: 60px;
+  width: 230px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  font-family: 'Barlow', sans-serif;
+  border-radius: 5px;
+  font-size: 20px;
+  color: white;
+  background-color: #167297;
+}
+
+.no-user {
+  display: none;
 }
