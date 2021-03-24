@@ -19,6 +19,7 @@ const Word = ({w, fetchWords}) => {
       }
     const deleteWord = () => {
         setDeleting(!deleting)
+        setTimeout(function(){setDeleting(false)}, 5000)
         if(deleting === true){
             const db=fire.firestore() 
             db.collection('words').doc(w.id).delete()
