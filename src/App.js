@@ -60,6 +60,7 @@ const App = () => {
       word: newWord,
       definition: newDefinition
     }).then(result =>{
+      setNewWord("")
       fetchWords()
     })
   }
