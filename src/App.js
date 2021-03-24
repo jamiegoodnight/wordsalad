@@ -3,6 +3,7 @@ import React, {useState, useEffect} from 'react';
 import firebase from "firebase/app";
 import fire from './fire'
 import "firebase/auth";
+import Word from './components/Word'
 
 const App = () => {
   const [user, setUser] = useState('')
@@ -12,27 +13,45 @@ const App = () => {
   const [myDictionary, setMyDictionary] = useState([])
   const provider = new firebase.auth.GoogleAuthProvider();
   const db = fire.firestore();
+  const fetchWords= async () => {
+    const data = await db.collection('words').get()
+    const myData = data.docs.map(doc => ({...doc.data(), id: doc.id}))
+    setDictionary(myData.sort(function(a, b){
+      if(a.word < b.word) { return -1; }
+      if(a.word > b.word) { return 1; }
+      return 0;
+  }))
+  }
   const signIn = () => {
-    console.log("HI")
-    console.log("FIRE ->", fire)
-    fire.auth().signInWithPopup(provider).then(function(result){
-      // console.log("This is my result", result.credential.idToken)
+  // console.log("HI")
+  // console.log("FIRE ->", fire)
+    fire.auth().signInWithPopup(provider)
+    .then(result => {
+    // console.log("This is my result", result.credential.idToken)
       console.log(result.additionalUserInfo.profile.id)
       console.log(result)
       setUser(result.additionalUserInfo.profile.id)
-    }).then(function(e){
+    })
+    .then(function(e){
       const fetchData = async () => { 
         const data = await db.collection('words').get()
-        setDictionary(data.docs.map(doc => doc.data()))
+        const myData = data.docs.map(doc => ({...doc.data(), id: doc.id}))
+        setDictionary(myData.sort(function(a, b){
+          if(a.word < b.word) { return -1; }
+          if(a.word > b.word) { return 1; }
+          return 0;
+      }))
+        // setDictionary(data.docs.map(doc => doc.data()))
       }
       fetchData()
-    }).then(function(e){
-      dictionary.map(w => {
-        console.log("My w", w)
-      })
-      setMyDictionary(dictionary.filter(w => w.userId===user ))
-      console.log("Here is my Dictionary", myDictionary)
     })
+    // .then(function(e){
+    //   dictionary.map(w => {
+    //     console.log("My w", w)
+    //   })
+    //   setMyDictionary(dictionary.filter(w => w.userId===user ))
+    //   console.log("Here is my Dictionary", myDictionary)
+    // })
   }
   const addWord = () => {
     let words = db.collection('words')
@@ -40,11 +59,9 @@ const App = () => {
       userId: user,
       word: newWord,
       definition: newDefinition
+    }).then(result =>{
+      fetchWords()
     })
-  }
-  const updateWord = () => {
-    const db=firebase.firestore() 
-    db.collection('words').doc(word.definition).set({... word, definition})
   }
   return (
     <div className="App">
@@ -65,16 +82,21 @@ const App = () => {
           <div className="Button" onClick={(e) => addWord()}>ADD WORD OR PHRASE</div>
         </div>
         <div className="My-words">
-        {myDictionary.map(w => (
-        <div className="Word">
-          <h2>{w.word}</h2>
-          <p>{w.definition}</p>
-          <div className="Icons">
-            <i class="fas fa-edit"></i>
-            <i class="fas fa-trash"></i>
-          </div>  
-        </div>
-      ))}
+        {dictionary.map(w => { 
+          if(w.userId===user){
+            return(  
+             <Word w={w} fetchWords={fetchWords} />
+            )
+          }
+        // <div className="Word">
+        //   <h2>{w.word}</h2>
+        //   <p>{w.definition}</p>
+        //   <div className="Icons">
+        //     <i class="fas fa-edit"></i>
+        //     <i class="fas fa-trash"></i>
+        //   </div>  
+        // </div>
+        })}
           <div className="Word">
             <h2>Cat</h2>
             <p>Definition of cat.</p>
@@ -101,7 +123,10 @@ const App = () => {
           </div>
           <div className="Word">
             <h2>Who dat</h2>
-            <p>Who dat is a fun way to say, "Who is that?"</p>
+            <p>Who dat is a fun way to say, "Who is that?" Consider how boring it usually is to 
+              say that. You know? "Who dat" really takes it up a notch or two or three. Or four.
+              There's no putting a number on the number of notches it takes it up in all seriousness.
+            </p>
             <div className="Icons">
              <i class="fas fa-edit"></i>
              <i class="fas fa-trash"></i>
@@ -114,3 +139,32 @@ const App = () => {
 }
 
 export default App
+
+
+
+// const signIn = () => {
+//   // console.log("HI")
+//   // console.log("FIRE ->", fire)
+//   fire.auth().signInWithPopup(provider)
+//   .then(result => {
+//     // console.log("This is my result", result.credential.idToken)
+//     console.log(result.additionalUserInfo.profile.id)
+//     console.log(result)
+//     setUser(result.additionalUserInfo.profile.id)
+//   })
+//   .then(function(e){
+//     const fetchData = async () => { 
+//       const data = await db.collection('words').get()
+//       setDictionary(data.docs.map(doc => doc.data()))
+
+//     }
+//     fetchData()
+//   })
+//   .then(function(e){
+//     dictionary.map(w => {
+//       console.log("My w", w)
+//     })
+//     setMyDictionary(dictionary.filter(w => w.userId===user ))
+//     console.log("Here is my Dictionary", myDictionary)
+//   })
+// }
