@@ -7,7 +7,9 @@ const Word = ({w, fetchWords}) => {
     const [defining, setDefining] = useState(false)
     const [deleting, setDeleting] = useState(false)
     const [display, setDisplay] = useState(true)
+    const [fake, setFake] = useState(false)
     const updateWord = () => { 
+        setFake(true)
         const db=fire.firestore() 
         db.collection('words').doc(w.id).set({... w, definition})
         .then(result => {
@@ -35,7 +37,7 @@ const Word = ({w, fetchWords}) => {
                   setDefinition(e.target.value)
               }} />
           ) : (
-            <p>{w.definition}</p>
+            <p>{fake===true ? definition : w.definition}</p>
           )}
           <div className="Icons">
               {defining === true ? (

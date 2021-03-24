@@ -11,6 +11,8 @@ const App = () => {
   const [newWord, setNewWord] = useState('')
   const [dictionary, setDictionary] = useState([])
   const [myDictionary, setMyDictionary] = useState([])
+  const [isClicked, setIsClicked] = useState(false)
+  const [isClicked2, setIsClicked2] = useState(false)
   const provider = new firebase.auth.GoogleAuthProvider();
   const db = fire.firestore();
   const fetchWords= async () => {
@@ -25,6 +27,8 @@ const App = () => {
   const signIn = () => {
   // console.log("HI")
   // console.log("FIRE ->", fire)
+    setIsClicked(true)
+    setTimeout(function(){setIsClicked(false)}, 200)
     fire.auth().signInWithPopup(provider)
     .then(result => {
     // console.log("This is my result", result.credential.idToken)
@@ -54,6 +58,8 @@ const App = () => {
     // })
   }
   const addWord = () => {
+    setIsClicked2(true)
+    setTimeout(function(){setIsClicked2(false)}, 200)
     let words = db.collection('words')
     words.add({
       userId: user,
@@ -71,16 +77,16 @@ const App = () => {
         <div className="Header-input">
          {/* <input type="text" name="username"></input>
          <input type="password" name="password"></input> */}
-         <div className="Button Sign-in" onClick={(e) =>signIn()}>SIGN IN WITH GOOGLE</div>
+         <div className={isClicked===true ? "clicked" : "Button"} onClick={(e) =>signIn()}>SIGN IN WITH GOOGLE</div>
         </div>
       </header>
-      <div className="Dictionary">
+      <div className={user.length > 1 ? "Dictionary" : "no-user"}>
         <h1>My Dictionary</h1>
         <div className="Add-a-word">
           <input type="text" value={newWord} onChange={(e) => {
             setNewWord(e.target.value)
           }}></input>
-          <div className="Button" onClick={(e) => addWord()}>ADD WORD OR PHRASE</div>
+          <div className={isClicked2===true ? "clicked2" : "Button"} onClick={(e) => addWord()}>ADD WORD OR PHRASE</div>
         </div>
         <div className="My-words">
         {dictionary.map(w => { 
@@ -98,7 +104,7 @@ const App = () => {
         //   </div>  
         // </div>
         })}
-          <div className="Word">
+          {/* <div className="Word">
             <h2>Cat</h2>
             <p>Definition of cat.</p>
             <div className="Icons">
@@ -132,7 +138,7 @@ const App = () => {
              <i class="fas fa-edit"></i>
              <i class="fas fa-trash"></i>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
