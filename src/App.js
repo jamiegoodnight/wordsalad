@@ -73,8 +73,10 @@ const App = () => {
       fetchWords()
     })
   }
-  setTimeout(function(){setIsClicked2(false)}, 200)
-  setDisable(false)
+  setTimeout(function(){
+    setIsClicked2(false)
+    setDisable(false)
+  }, 200)
   }
   return (
     <div className="App">
